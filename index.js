@@ -1,13 +1,21 @@
-const express = require('express')
+const express = require('express');
+const cors = require('cors')
+
+
 const app = express();
-const port = 3001;
 
-app.get('/', (req,res) => {
-    res.send('Hello World');
-});
+app.use(cors())
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`)
-})
+app.get("/api/v1/users", (req,res) => {
 
-module.exports = app;
+	const users = [
+		{ id: 1, name: "John Doe" },
+		{	id: 2, name: "Jane Doe" }
+		];
+		
+		return res.status(200).json({ users });
+		});
+		
+		app.listen(5000, () => {
+			console.log("App listening on port 5000!);
+			});

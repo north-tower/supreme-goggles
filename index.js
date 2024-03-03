@@ -28,18 +28,6 @@ app.use(bodyParser.json()); // Use body-parser middleware
 const port = 5000;
 
 // Endpoint to read data from Firestore
-app.get('/', async (req, res) => {
-  console.log("Hello")
-  // try {
-  //   const snapshot = await admin.firestore().collection('cars').get();
-  //   const data = snapshot.docs.map(doc => doc.data());
-  //   res.json(data);
-  // } catch (error) {
-  //   console.error('Error reading data from Firestore:', error);
-  //   res.status(500).send('Error reading data from Firestore');
-  // }
-});
-// Endpoint to read data from Firestore
 app.get('/api/v1/getData', async (req, res) => {
   try {
     const snapshot = await admin.firestore().collection('cars').get();

@@ -66,9 +66,9 @@ app.get('/api/v1/getTrips', async (req, res) => {
 // Endpoint to write data (add a new driver) to Firestore
 app.post('/api/v1/addDriver', async (req, res) => {
   try {
-    const { description, amount } = req.body;
+    const { description, amount, category } = req.body;
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('expense').add({ description, amount });
+    await admin.firestore().collection('expense').add({ description, amount, category });
     res.status(201).send('Expense added successfully');
   } catch (error) {
     console.error('Error adding new driver to Firestore:', error);

@@ -33,7 +33,7 @@ const port = 5000;
 // Endpoint to read data from Firestore
 app.get('/api/v1/getData', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('cars').get();
+    const snapshot = await admin.firestore().collection('expense').get();
     const data = snapshot.docs.map(doc => doc.data());
     res.json(data);
   } catch (error) {

@@ -2,6 +2,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config(); // Load environment variables
 
 // Initialize Firebase Admin SDK using environment variables
@@ -94,8 +95,9 @@ app.get('/api/v1/getTrips', async (req, res) => {
 app.post('/api/v1/addDriver', async (req, res) => {
   try {
      const { description, amount, category } = req.body;
+     const id = uuidv4(); // Generate a unique ID
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('expense').add({ description, amount, category  });
+    await admin.firestore().collection('expense').add({id, description, amount, category  });
     res.status(201).send('Expense added successfully');
   } catch (error) {
     console.error('Error adding new driver to Firestore:', error);

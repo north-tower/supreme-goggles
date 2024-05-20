@@ -96,12 +96,12 @@ app.post('/api/v1/addDriver', async (req, res) => {
   try {
      const { description, amount, category } = req.body;
     const status = "Not Approved"
-     const id = uuidv4(); // Generate a unique ID
+     const uuid = uuidv4(); // Generate a unique ID
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('expense').add({id, description, amount, category, status  });
+    await admin.firestore().collection('expense').add({uuid, description, amount, category, status  });
     res.status(201).send('Expense added successfully');
   } catch (error) {
-    console.error('Error adding new driver to Firestore:', error);
+    console.error('Error adding new expense to Firestore:', error);
     res.status(500).send('Error adding new expense to Firestore');
   }
 });

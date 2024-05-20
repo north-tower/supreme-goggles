@@ -159,11 +159,12 @@ app.post('/api/v1/addTrip', async (req, res) => {
   }
 });
 
-app.put('/api/v1/updateExpense', async (req, res) => {
+app.put('/api/v1/updateExpense/:id', async (req, res) => {
   try {
-   const { id } = req.body;
+    const { id } = req.params; // Extract ID from URL parameters
     const expenseRef = admin.firestore().collection('expense').doc(id);
-    const status = "Approved"
+    const status = "Approved";
+
     // Check if the expense document exists
     const doc = await expenseRef.get();
     if (!doc.exists) {

@@ -129,6 +129,19 @@ app.post('/api/v1/addHotel', async (req, res) => {
     res.status(500).send('Error adding new driver to Firestore');
   }
 });
+app.post('/api/v1/addIncome', async (req, res) => {
+  try {
+    const { uuid, status,description,amount, category } = req.body;
+     const status = "Not Approved"
+     const uuid = uuidv4(); // Generate a unique ID
+    // Assuming the data to be written is sent in the request body
+    await admin.firestore().collection('hotels').add({ uuid, status,description,amount, category });
+    res.status(201).send('Income added successfully');
+  } catch (error) {
+    console.error('Error adding new income to Firestore:', error);
+    res.status(500).send('Error adding new income to Firestore');
+  }
+});
 // Endpoint to add a new trip to Firestore
 app.post('/api/v1/addTrip', async (req, res) => {
   try {

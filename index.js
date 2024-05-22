@@ -43,6 +43,17 @@ app.get('/api/v1/getData', async (req, res) => {
   }
 });
 
+
+app.get('/api/v1/getIncome', async (req, res) => {
+  try {
+    const snapshot = await admin.firestore().collection('income').get();
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(data);
+  } catch (error) {
+    console.error('Error reading data from Firestore:', error);
+    res.status(500).send('Error reading data from Firestore');
+  }
+});
 app.get('/api/v1/getCategories', async (req, res) => {
   try {
     const snapshot = await admin.firestore().collection('budgets').get();

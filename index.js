@@ -131,8 +131,9 @@ app.post('/api/v1/addDriver', async (req, res) => {
 app.post('/api/v1/addCategory', async (req, res) => {
   try {
      const { id, name, budget } = req.body;
+    const uuid = uuidv4(); // Generate a unique ID
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('budget').add({ id, name, budget  });
+    await admin.firestore().collection('budget').add({ uuid, name, budget  });
     res.status(201).send('Expense added successfully');
   } catch (error) {
     console.error('Error adding new category to Firestore:', error);

@@ -70,6 +70,17 @@ app.get('/api/v1/getBudget', async (req, res) => {
     res.status(500).send('Error reading data from Firestore');
   }
 });
+
+app.get('/api/v1/getIncomeCat', async (req, res) => {
+  try {
+    const snapshot = await admin.firestore().collection('incomeCat').get();
+    const data = snapshot.docs.map(doc => doc.data());
+    res.json(data);
+  } catch (error) {
+    console.error('Error reading data from Firestore:', error);
+    res.status(500).send('Error reading data from Firestore');
+  }
+});
 app.get('/api/v1/getHotel', async (req, res) => {
   try {
     const snapshot = await admin.firestore().collection('hotels').get();

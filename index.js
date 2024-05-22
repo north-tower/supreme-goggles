@@ -118,6 +118,19 @@ app.post('/api/v1/addCategory', async (req, res) => {
   }
 });
 
+  app.post('/api/v1/addIncomeCategory', async (req, res) => {
+  try {
+     const {  name } = req.body;
+     const uuid = uuidv4(); // Generate a unique ID
+    // Assuming the data to be written is sent in the request body
+    await admin.firestore().collection('incomeCat').add({ uuid, name });
+    res.status(201).send('Expense added successfully');
+  } catch (error) {
+    console.error('Error adding new category to Firestore:', error);
+    res.status(500).send('Error adding new expense to Firestore');
+  }
+});
+
 app.post('/api/v1/addIncome', async (req, res) => {
   try {
     const { description,amount, category } = req.body;

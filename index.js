@@ -72,7 +72,7 @@ app.get('/api/v1/getCategories', async (req, res) => {
 });
 app.get('/api/v1/getTotalExpenses', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('expenses').get();
+    const snapshot = await admin.firestore().collection('expense').get();
     let totalAmount = 0;
 
     snapshot.docs.forEach(doc => {

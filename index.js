@@ -72,7 +72,7 @@ app.get('/api/v1/getCategories', async (req, res) => {
 });
 app.get('/api/v1/getTotalExpenses', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('expense').get();
+    const snapshot = await admin.firestore().collection('expenses').get();
     let totalAmount = 0;
 
     snapshot.docs.forEach(doc => {
@@ -87,6 +87,8 @@ app.get('/api/v1/getTotalExpenses', async (req, res) => {
     console.error('Error reading data from Firestore:', error);
     res.status(500).send('Error reading data from Firestore');
   }
+});
+
 // Endpoint to read data from Firestore
 app.get('/api/v1/getBudget', async (req, res) => {
   try {

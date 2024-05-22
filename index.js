@@ -230,6 +230,28 @@ app.put('/api/v1/updateExpense/:id', async (req, res) => {
   }
 });
 
+
+app.put('/api/v1/updateIncome/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Extract ID from URL parameters
+    const expenseRef = admin.firestore().collection('income').doc(id);
+    const status = "Approved";
+
+    // Check if the expense document exists
+    const doc = await expenseRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Income not found');
+    }
+
+    // Update the expense document
+    await expenseRef.update({ status });
+    res.status(200).send('Income updated successfully');
+  } catch (error) {
+    console.error('Error updating expense in Firestore:', error);
+    res.status(500).send('Error updating expense in Firestore');
+  }
+});
+
 app.listen(process.env.PORT || port, () => {
   console.log(`Server is running on port ${port}`);
 });

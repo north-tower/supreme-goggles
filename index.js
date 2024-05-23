@@ -78,7 +78,10 @@ app.get('/api/v1/getTotalExpenses', async (req, res) => {
     snapshot.docs.forEach(doc => {
       const expenseData = doc.data();
       if (expenseData.amount) {
-        totalAmount += expenseData.amount;
+        const amount = parseInt(expenseData.amount, 10);
+        if (!isNaN(amount)) {
+          totalAmount += amount;
+        }
       }
     });
 
@@ -88,6 +91,7 @@ app.get('/api/v1/getTotalExpenses', async (req, res) => {
     res.status(500).send('Error reading data from Firestore');
   }
 });
+
 
 // Endpoint to read data from Firestore
 app.get('/api/v1/getBudget', async (req, res) => {

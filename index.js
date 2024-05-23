@@ -97,9 +97,9 @@ app.get('/api/v1/getTotalIncome', async (req, res) => {
     let totalAmount = 0;
 
     snapshot.docs.forEach(doc => {
-      const IncomeData = doc.data();
-      if (expenseData.amount) {
-        const amount = parseInt(IncomeData.amount, 10);
+      const incomeData = doc.data();
+      if (incomeData.amount) {
+        const amount = parseInt(incomeData.amount, 10);
         if (!isNaN(amount)) {
           totalAmount += amount;
         }

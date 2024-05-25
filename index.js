@@ -229,8 +229,9 @@ app.post('/api/v1/addInvoice', async (req, res) => {
     const { description,amount, name } = req.body;
      const status = "Not Paid"
      const uuid = uuidv4(); // Generate a unique ID
+     const timestamp = admin.firestore.FieldValue.serverTimestamp()
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('invoice').add({ uuid, status,description,amount, name });
+    await admin.firestore().collection('invoice').add({ uuid, status,description,amount, name, timestamp });
     res.status(201).send('Invoice added successfully');
   } catch (error) {
     console.error('Error adding new invoice to Firestore:', error);

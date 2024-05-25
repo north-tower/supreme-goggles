@@ -326,7 +326,7 @@ app.put('/api/v1/updateInvoice/:id', async (req, res) => {
   try {
     const { id } = req.params; // Extract ID from URL parameters
     const invoiceRef = admin.firestore().collection('invoice').doc(id);
-    const status = "Approved";
+    const status = "Paid";
 
     // Check if the expense document exists
     const doc = await invoiceRef.get();
@@ -335,7 +335,7 @@ app.put('/api/v1/updateInvoice/:id', async (req, res) => {
     }
 
     // Update the expense document
-    await InvoiceRef.update({ status });
+    await invoiceRef.update({ status });
     res.status(200).send('Invoice updated successfully');
   } catch (error) {
     console.error('Error updating invoice in Firestore:', error);

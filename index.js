@@ -29,6 +29,14 @@ app.use(bodyParser.json());
 const port = 5000;
 
 // Rest of your code remains unchanged
+// Helper function to add income
+async function addIncome(description, amount, category) {
+  const status = "Not Approved";
+  const uuid = uuidv4(); // Generate a unique ID
+
+  // Add new income document to Firestore
+  await admin.firestore().collection('income').add({ uuid, status, description, amount, category });
+}
 
 
 // Endpoint to read data from Firestore
@@ -323,24 +331,33 @@ app.put('/api/v1/updateIncome/:id', async (req, res) => {
     res.status(500).send('Error updating expense in Firestore');
   }
 });
+
+// Endpoint to update an invoice and add income
 app.put('/api/v1/updateInvoice/:id', async (req, res) => {
   try {
     const { id } = req.params; // Extract ID from URL parameters
     const invoiceRef = admin.firestore().collection('invoice').doc(id);
     const status = "Paid";
-
-    // Check if the expense document exists
+  
+    // Check if the invoice document exists
     const doc = await invoiceRef.get();
     if (!doc.exists) {
-      return res.status(404).send('Invoice  not found');
+      return res.status(404).send('Invoice not found');
     }
 
-    // Update the expense document
+    // Extract amount and description from the invoice document
+    const { description, amount, category } = doc.data();
+
+    // Update the invoice document
     await invoiceRef.update({ status });
-    res.status(200).send('Invoice updated successfully');
+
+    // Call the addIncome function after updating the invoice
+    await addIncome(description, amount, category);
+
+    res.status(200).send('Invoice updated and income added successfully');
   } catch (error) {
-    console.error('Error updating invoice in Firestore:', error);
-    res.status(500).send('Error updating invoice in Firestore');
+    console.error('Error updating invoice or adding income in Firestore:', error);
+    res.status(500).send('Error updating invoice or adding income in Firestore');
   }
 });
 

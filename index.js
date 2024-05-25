@@ -345,8 +345,11 @@ app.put('/api/v1/updateInvoice/:id', async (req, res) => {
       return res.status(404).send('Invoice not found');
     }
 
-    // Extract amount and description from the invoice document
-    const { description, amount, category } = doc.data();
+    // Extract amount, description, and category from the invoice document
+    const invoiceData = doc.data();
+    const description = invoiceData.description || 'No description provided';
+    const amount = invoiceData.amount || 0;
+    const category = invoiceData.category || 'Uncategorized';
 
     // Update the invoice document
     await invoiceRef.update({ status });
@@ -360,8 +363,6 @@ app.put('/api/v1/updateInvoice/:id', async (req, res) => {
     res.status(500).send('Error updating invoice or adding income in Firestore');
   }
 });
-
-
 
 
 app.listen(process.env.PORT || port, () => {

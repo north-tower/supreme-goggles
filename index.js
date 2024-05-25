@@ -218,11 +218,11 @@ app.post('/api/v1/addInvoice', async (req, res) => {
      const status = "Not Paid"
      const uuid = uuidv4(); // Generate a unique ID
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('income').add({ uuid, status,description,amount, cust_name });
-    res.status(201).send('Income added successfully');
+    await admin.firestore().collection('invoice').add({ uuid, status,description,amount, cust_name });
+    res.status(201).send('Invoice added successfully');
   } catch (error) {
-    console.error('Error adding new income to Firestore:', error);
-    res.status(500).send('Error adding new income to Firestore');
+    console.error('Error adding new invoice to Firestore:', error);
+    res.status(500).send('Error adding new invoice to Firestore');
   }
 });
 

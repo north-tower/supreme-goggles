@@ -322,6 +322,29 @@ app.put('/api/v1/updateIncome/:id', async (req, res) => {
     res.status(500).send('Error updating expense in Firestore');
   }
 });
+app.put('/api/v1/updateInvoice/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Extract ID from URL parameters
+    const invoiceRef = admin.firestore().collection('invoice').doc(id);
+    const status = "Approved";
+
+    // Check if the expense document exists
+    const doc = await invoiceRef.get();
+    if (!doc.exists) {
+      return res.status(404).send('Invoice  not found');
+    }
+
+    // Update the expense document
+    await InvoiceRef.update({ status });
+    res.status(200).send('Invoice updated successfully');
+  } catch (error) {
+    console.error('Error updating invoice in Firestore:', error);
+    res.status(500).send('Error updating invoice in Firestore');
+  }
+});
+
+
+
 
 app.listen(process.env.PORT || port, () => {
   console.log(`Server is running on port ${port}`);

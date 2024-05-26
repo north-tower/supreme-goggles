@@ -349,7 +349,7 @@ app.put('/api/v1/updateInvoice/:id', async (req, res) => {
     const invoiceData = doc.data();
     const description = invoiceData.description || 'No description provided';
     const amount = invoiceData.amount || 0;
-    const category = invoiceData.category || 'Uncategorized';
+    const category = invoiceData.category || 'Invoice';
 
     // Update the invoice document
     await invoiceRef.update({ status });

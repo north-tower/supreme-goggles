@@ -67,12 +67,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
       const category = budgetDoc.id;
       const budgetData = budgetDoc.data();
       const budgetName = budgetData.name; // Assuming 'name' is the field for the budget name
-      let budgetAmount = budgetData.amount;
-
-      // Ensure budget amount is a number
-      if (typeof budgetAmount !== 'number') {
-        budgetAmount = parseFloat(budgetAmount);
-      }
+      let budgetAmount = parseFloat(budgetData.amount);
 
       if (isNaN(budgetAmount)) {
         console.warn(`Invalid budget amount for category ${category}`);
@@ -86,12 +81,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
 
       let totalExpenses = 0;
       expensesSnapshot.forEach(expenseDoc => {
-        let expenseAmount = expenseDoc.data().amount;
-
-        // Ensure expense amount is a number
-        if (typeof expenseAmount !== 'number') {
-          expenseAmount = parseFloat(expenseAmount);
-        }
+        let expenseAmount = parseFloat(expenseDoc.data().amount);
 
         if (!isNaN(expenseAmount)) {
           totalExpenses += expenseAmount;

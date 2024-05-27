@@ -64,7 +64,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
 
     // Process each budget category
     for (const budgetDoc of budgetsSnapshot.docs) {
-      const category = budgetDoc.id;
+      const category = budgetDoc.data().name;
       const budget = parseInt(budgetDoc.data().budget,10); // Assuming 'amount' is the field name for budget amount
     
       // Fetch all expenses for the current category

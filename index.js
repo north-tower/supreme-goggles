@@ -65,8 +65,8 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
     // Process each budget category
     for (const budgetDoc of budgetsSnapshot.docs) {
       const category = budgetDoc.id;
-      const budget = budgetDoc.data().amount; // Assuming 'amount' is the field name for budget amount
-
+      const budget = budgetDoc.data().budget; // Assuming 'amount' is the field name for budget amount
+      const budget = parseInt(budget,10);
       // Fetch all expenses for the current category
       const expensesSnapshot = await admin.firestore().collection('expense')
         .where('category', '==', category)

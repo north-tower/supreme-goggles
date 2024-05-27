@@ -53,7 +53,7 @@ app.get('/api/v1/getData', async (req, res) => {
 app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
   try {
     // Fetch all categories from the budget collection
-    const budgetsSnapshot = await admin.firestore().collection('budget').get();
+    const budgetsSnapshot = await admin.firestore().collection('budgets').get();
 
     if (budgetsSnapshot.empty) {
       res.status(404).send('No budgets found');
@@ -65,39 +65,25 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
     // Process each budget category
     for (const budgetDoc of budgetsSnapshot.docs) {
       const category = budgetDoc.id;
-      const budgetData = budgetDoc.data();
-      const budgetName = budgetData.name; // Assuming 'name' is the field for the budget name
-      let budgetAmount = parseFloat(budgetData.amount);
-
-      if (isNaN(budgetAmount)) {
-        console.warn(`Invalid budget amount for category ${category}`);
-        continue; // Skip this category if budget amount is invalid
-      }
+      const budget = budgetDoc.data().amount; // Assuming 'amount' is the field name for budget amount
 
       // Fetch all expenses for the current category
-      const expensesSnapshot = await admin.firestore().collection('expense')
+      const expensesSnapshot = await admin.firestore().collection('expenses')
         .where('category', '==', category)
         .get();
 
       let totalExpenses = 0;
       expensesSnapshot.forEach(expenseDoc => {
-        let expenseAmount = parseFloat(expenseDoc.data().amount);
-
-        if (!isNaN(expenseAmount)) {
-          totalExpenses += expenseAmount;
-        } else {
-          console.warn(`Invalid expense amount in document ${expenseDoc.id}`);
-        }
+        totalExpenses += expenseDoc.data().amount; // Assuming 'amount' is the field name for expense amount
       });
 
       // Calculate the percentage of budget used
-      const percentageUsed = (totalExpenses / budgetAmount) * 100;
+      const percentageUsed = (totalExpenses / budget) * 100;
 
       results.push({
         category,
-        budgetName,
         totalExpenses,
-        budget: budgetAmount,
+        budget,
         percentageUsed: percentageUsed.toFixed(2)
       });
     }

@@ -50,6 +50,50 @@ app.get('/api/v1/getData', async (req, res) => {
     res.status(500).send('Error reading data from Firestore');
   }
 });
+app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
+  try {
+    // Fetch all categories from the budget collection
+    const budgetsSnapshot = await db.collection('budget').get();
+
+    if (budgetsSnapshot.empty) {
+      res.status(404).send('No budgets found');
+      return;
+    }
+
+    const results = [];
+
+    // Process each budget category
+    for (const budgetDoc of budgetsSnapshot.docs) {
+      const category = budgetDoc.id;
+      const budget = budgetDoc.data().amount; // Assuming 'amount' is the field name for budget amount
+
+      // Fetch all expenses for the current category
+      const expensesSnapshot = await db.collection('expense')
+        .where('category', '==', category)
+        .get();
+
+      let totalExpenses = 0;
+      expensesSnapshot.forEach(expenseDoc => {
+        totalExpenses += expenseDoc.data().amount; // Assuming 'amount' is the field name for expense amount
+      });
+
+      // Calculate the percentage of budget used
+      const percentageUsed = (totalExpenses / budget) * 100;
+
+      results.push({
+        category,
+        totalExpenses,
+        budget,
+        percentageUsed: percentageUsed.toFixed(2)
+      });
+    }
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error calculating budget usage:', error);
+    res.status(500).send('Error calculating budget usage');
+  }
+});
 
 app.get('/api/v1/getInvoice', async (req, res) => {
   try {

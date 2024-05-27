@@ -53,7 +53,7 @@ app.get('/api/v1/getData', async (req, res) => {
 app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
   try {
     // Fetch all categories from the budget collection
-    const budgetsSnapshot = await admin.firestore().collection('budget').get();
+    const budgetsSnapshot = await db.collection('budget').get();
 
     if (budgetsSnapshot.empty) {
       res.status(404).send('No budgets found');
@@ -65,25 +65,49 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
     // Process each budget category
     for (const budgetDoc of budgetsSnapshot.docs) {
       const category = budgetDoc.id;
-      const budget = budgetDoc.data().amount; // Assuming 'amount' is the field name for budget amount
+      const budgetData = budgetDoc.data();
+      const budgetName = budgetData.name; // Assuming 'name' is the field for the budget name
+      let budgetAmount = budgetData.amount;
+
+      // Ensure budget amount is a number
+      if (typeof budgetAmount !== 'number') {
+        budgetAmount = parseFloat(budgetAmount);
+      }
+
+      if (isNaN(budgetAmount)) {
+        console.warn(`Invalid budget amount for category ${category}`);
+        continue; // Skip this category if budget amount is invalid
+      }
 
       // Fetch all expenses for the current category
-      const expensesSnapshot = await admin.firestore().collection('expense')
+      const expensesSnapshot = await db.collection('expense')
         .where('category', '==', category)
         .get();
 
       let totalExpenses = 0;
       expensesSnapshot.forEach(expenseDoc => {
-        totalExpenses += expenseDoc.data().amount; // Assuming 'amount' is the field name for expense amount
+        let expenseAmount = expenseDoc.data().amount;
+
+        // Ensure expense amount is a number
+        if (typeof expenseAmount !== 'number') {
+          expenseAmount = parseFloat(expenseAmount);
+        }
+
+        if (!isNaN(expenseAmount)) {
+          totalExpenses += expenseAmount;
+        } else {
+          console.warn(`Invalid expense amount in document ${expenseDoc.id}`);
+        }
       });
 
       // Calculate the percentage of budget used
-      const percentageUsed = (totalExpenses / budget) * 100;
+      const percentageUsed = (totalExpenses / budgetAmount) * 100;
 
       results.push({
         category,
+        budgetName,
         totalExpenses,
-        budget,
+        budget: budgetAmount,
         percentageUsed: percentageUsed.toFixed(2)
       });
     }

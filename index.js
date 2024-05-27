@@ -53,7 +53,7 @@ app.get('/api/v1/getData', async (req, res) => {
 app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
   try {
     // Fetch all categories from the budget collection
-    const budgetsSnapshot = await db.collection('budget').get();
+    const budgetsSnapshot = await admin.firestore().collection('budget').get();
 
     if (budgetsSnapshot.empty) {
       res.status(404).send('No budgets found');
@@ -68,7 +68,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
       const budget = budgetDoc.data().amount; // Assuming 'amount' is the field name for budget amount
 
       // Fetch all expenses for the current category
-      const expensesSnapshot = await db.collection('expense')
+      const expensesSnapshot = await admin.firestore().collection('expense')
         .where('category', '==', category)
         .get();
 

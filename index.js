@@ -65,8 +65,8 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
     // Process each budget category
     for (const budgetDoc of budgetsSnapshot.docs) {
       const category = budgetDoc.id;
-      const budget = budgetDoc.data().budget; // Assuming 'amount' is the field name for budget amount
-      const budget = parseInt(budget,10);
+      const budget = parseInt(budgetDoc.data().budget,10); // Assuming 'amount' is the field name for budget amount
+    
       // Fetch all expenses for the current category
       const expensesSnapshot = await admin.firestore().collection('expense')
         .where('category', '==', category)
@@ -74,7 +74,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
 
       let totalExpenses = 0;
       expensesSnapshot.forEach(expenseDoc => {
-        totalExpenses += expenseDoc.data().amount; // Assuming 'amount' is the field name for expense amount
+        totalExpenses +=  parseInt(expenseDoc.data().amount,10); // Assuming 'amount' is the field name for expense amount
       });
 
       // Calculate the percentage of budget used

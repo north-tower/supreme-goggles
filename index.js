@@ -277,8 +277,9 @@ app.post('/api/v1/addIncome', async (req, res) => {
     const { description,amount, category } = req.body;
      const status = "Not Approved"
      const uuid = uuidv4(); // Generate a unique ID
+    const timestamp = admin.firestore.FieldValue.serverTimestamp()
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('income').add({ uuid, status,description,amount, category });
+    await admin.firestore().collection('income').add({ uuid, status,description,amount, category, timestamp });
     res.status(201).send('Income added successfully');
   } catch (error) {
     console.error('Error adding new income to Firestore:', error);

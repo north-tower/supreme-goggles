@@ -95,7 +95,7 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
   }
 });
 
-app.get('/api/v1/getInvoice/:start/:end'', async (req, res) => {
+app.get('/api/v1/getInvoice/:start/:end', async (req, res) => {
   try {
     const { start, end } = req.params;
       // Parse the times to Firestore Timestamp objects

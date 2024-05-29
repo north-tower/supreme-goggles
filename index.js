@@ -95,9 +95,18 @@ app.get('/api/v1/getAllBudgetUsages', async (req, res) => {
   }
 });
 
-app.get('/api/v1/getInvoice', async (req, res) => {
+app.get('/api/v1/getInvoice/:start/:end'', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('invoice').get();
+    const { start, end } = req.params;
+      // Parse the times to Firestore Timestamp objects
+    const startTimestamp = admin.firestore.Timestamp.fromDate(new Date(start));
+    const endTimestamp = admin.firestore.Timestamp.fromDate(new Date(end));
+
+    // Create a query with the time range
+    const snapshot = await admin.firestore().collection('invoice')
+      .where('createdAt', '>=', startTimestamp)
+      .where('createdAt', '<=', endTimestamp)
+      .get();
     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(data);
   } catch (error) {
@@ -315,9 +324,9 @@ app.post('/api/v1/addInvoice', async (req, res) => {
     const { description,amount, name } = req.body;
      const status = "Not Paid"
      const uuid = uuidv4(); // Generate a unique ID
-     const timestamp = admin.firestore.FieldValue.serverTimestamp()
+     const createdAt = admin.firestore.FieldValue.serverTimestamp()
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('invoice').add({ uuid, status,description,amount, name, timestamp });
+    await admin.firestore().collection('invoice').add({ uuid, status,description,amount, name, createAt });
     res.status(201).send('Invoice added successfully');
   } catch (error) {
     console.error('Error adding new invoice to Firestore:', error);

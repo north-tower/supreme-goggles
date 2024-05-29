@@ -234,13 +234,15 @@ app.get('/api/v1/getTrips', async (req, res) => {
 });
 
 // Endpoint to write data (add a new driver) to Firestore
-app.post('/api/v1/addDriver', async (req, res) => {
+app.post('/api/v1/addExpense', async (req, res) => {
   try {
      const { description, amount, category } = req.body;
     const status = "Not Approved"
      const uuid = uuidv4(); // Generate a unique ID
+    const createdAt = admin.firestore.FieldValue.serverTimestamp()
+    
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('expense').add({uuid, description, amount, category, status  });
+    await admin.firestore().collection('expense').add({uuid, description, amount, category, status , createdAt});
     res.status(201).send('Expense added successfully');
   } catch (error) {
     console.error('Error adding new expense to Firestore:', error);
@@ -278,9 +280,9 @@ app.post('/api/v1/addIncome', async (req, res) => {
     const { description,amount, category } = req.body;
      const status = "Not Approved"
      const uuid = uuidv4(); // Generate a unique ID
-    const timestamp = admin.firestore.FieldValue.serverTimestamp()
+    const createdAt = admin.firestore.FieldValue.serverTimestamp()
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('income').add({ uuid, status,description,amount, category, timestamp });
+    await admin.firestore().collection('income').add({ uuid, status,description,amount, category, createdAt});
     res.status(201).send('Income added successfully');
   } catch (error) {
     console.error('Error adding new income to Firestore:', error);

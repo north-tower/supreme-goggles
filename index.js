@@ -117,8 +117,8 @@ app.get('/api/v1/getIncome/:start/:end', async (req, res) => {
 
     // Create a query with the time range
     const snapshot = await admin.firestore().collection('expense')
-      .where('createdAt', '>=', start)
-      .where('createdAt', '<=', end)
+      .where('createdAt', '>=', '2024-01-01')
+      .where('createdAt', '<=', '2024-06-01')
       .get();
     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(data);

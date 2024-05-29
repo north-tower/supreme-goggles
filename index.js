@@ -116,7 +116,7 @@ app.get('/api/v1/getIncome/:start/:end', async (req, res) => {
     const endTimestamp = admin.firestore.Timestamp.fromDate(new Date(end));
 
     // Create a query with the time range
-    const snapshot = await admin.firestore().collection('expense')
+    const snapshot = await admin.firestore().collection('income')
       .where('createdAt', '>=', startTimestamp)
       .where('createdAt', '<=', endTimestamp)
       .get();

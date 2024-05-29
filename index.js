@@ -109,7 +109,17 @@ app.get('/api/v1/getInvoice', async (req, res) => {
 
 app.get('/api/v1/getIncome', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('income').get();
+    const { startTime, endTime } = req.query;
+
+    // Parse the times to Firestore Timestamp objects
+    const startTimestamp = admin.firestore.Timestamp.fromDate(new Date(startTime));
+    const endTimestamp = admin.firestore.Timestamp.fromDate(new Date(endTime));
+
+    // Create a query with the time range
+    const snapshot = await admin.firestore().collection('expense')
+      .where('createdAt', '>=', startTimestamp)
+      .where('createdAt', '<=', endTimestamp)
+      .get();
     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(data);
   } catch (error) {

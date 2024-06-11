@@ -338,7 +338,7 @@ app.post('/api/v1/addTrip', async (req, res) => {
     const createdAt = admin.firestore.FieldValue.serverTimestamp();
     const allowance = 1000;
     // Assuming the data to be written is sent in the request body
-    await admin.firestore().collection('trip').add({ uuid, status,destination , mileage, fuel, createdAt, alllowance});
+    await admin.firestore().collection('trip').add({ uuid, status,destination , mileage, fuel, createdAt, allowance});
     res.status(201).send('Trip added successfully');
   } catch (error) {
     console.error('Error adding new trip to Firestore:', error);
@@ -350,7 +350,8 @@ app.post('/api/v1/addInvoice', async (req, res) => {
     const { description,amount, name } = req.body;
      const status = "Not Paid"
      const uuid = uuidv4(); // Generate a unique ID
-     const createdAt = admin.firestore.FieldValue.serverTimestamp()
+     const createdAt = admin.firestore.FieldValue.serverTimestamp();
+    
     // Assuming the data to be written is sent in the request body
     await admin.firestore().collection('invoice').add({ uuid, status,description,amount, name, createdAt });
     res.status(201).send('Invoice added successfully');

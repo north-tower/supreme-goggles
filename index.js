@@ -126,6 +126,26 @@ app.get('/api/v1/getInvoice/:start/:end', async (req, res) => {
   }
 });
 
+app.get('/api/v1/getTrip/:start/:end', async (req, res) => {
+  try {
+    const { start, end } = req.params;
+      // Parse the times to Firestore Timestamp objects
+    const startTimestamp = admin.firestore.Timestamp.fromDate(new Date(start));
+    const endTimestamp = admin.firestore.Timestamp.fromDate(new Date(end));
+
+    // Create a query with the time range
+    const snapshot = await admin.firestore().collection('trip')
+      .where('createdAt', '>=', startTimestamp)
+      .where('createdAt', '<=', endTimestamp)
+      .get();
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(data);
+  } catch (error) {
+    console.error('Error reading data from Firestore:', error);
+    res.status(500).send('Error reading data from Firestore');
+  }
+});
+
 
 app.get('/api/v1/getIncome/:start/:end', async (req, res) => {
   try {

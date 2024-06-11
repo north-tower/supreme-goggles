@@ -330,6 +330,21 @@ app.post('/api/v1/addIncome', async (req, res) => {
   }
 });
 
+app.post('/api/v1/addTrip', async (req, res) => {
+  try {
+    const { destination, mileage , fuel } = req.body;
+     const status = "Not Approved"
+     const uuid = uuidv4(); // Generate a unique ID
+    const createdAt = admin.firestore.FieldValue.serverTimestamp();
+    const allowance = 1000;
+    // Assuming the data to be written is sent in the request body
+    await admin.firestore().collection('trip').add({ uuid, status,destination , mileage, fuel, createdAt, alllowance});
+    res.status(201).send('Trip added successfully');
+  } catch (error) {
+    console.error('Error adding new trip to Firestore:', error);
+    res.status(500).send('Error adding new trip to Firestore');
+  }
+});
 app.post('/api/v1/addInvoice', async (req, res) => {
   try {
     const { description,amount, name } = req.body;
